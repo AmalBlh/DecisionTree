@@ -39,3 +39,19 @@ class Node:
         # depth+1
         # return node_p, x_p, y_p, node_n, x_n, y_n
         pass
+
+
+    def predict(self, x):
+
+        param = self.param_index
+        if(x[param] > self.limit):
+            self.node_p.predict(x)
+        else :
+            self.node_n.predict(x)
+
+        if self.node_n is None :
+            return self.node_n.value 
+        else :
+            if self.node_p is None :
+                return self.node_p.value       
+        

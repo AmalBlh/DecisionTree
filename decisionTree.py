@@ -4,7 +4,7 @@ import node
 class DecisionTree:
     # score
     # main_node
-
+    
     def __init__(self, min_simple_leaf, max_depth):
         self.max_depth = max_depth
         self.min_simple_leaf = min_simple_leaf
@@ -16,8 +16,12 @@ class DecisionTree:
         return self.main_node
 
     def predict(x):
-        pass
-        # return y(array)
+        y = []
+        for i in range (x):
+            for j in range (x):
+                value = self.main_node.predict(x[i,j])
+                y.append(value)
+        return y
 
     def fit_predict(x, y):
         pass
