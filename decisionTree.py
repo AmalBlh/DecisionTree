@@ -26,9 +26,13 @@ class DecisionTree:
         pass
         # a verifier
 
-    def scoring():
-        pass
-        # retrn score (MSE)
+    def score(y, y_pred):
+        n = len(y)
+        somme=0
+        for i in range(n):
+            somme +=  (y[i]-y_pred[i]) ** 2
+        
+        return somme / n
 
     def display_tree(main_node):
         if main_node is not None:
