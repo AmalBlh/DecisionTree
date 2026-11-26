@@ -15,12 +15,11 @@ class DecisionTree:
         self.main_node.split(x, y, self.max_depth, self.min_sample_leaf)
         return self.main_node
 
-    def predict(x):
+    def predict(self , x):
         y = []
         for i in range (x):
-            for j in range (x):
-                value = self.main_node.predict(x[i,j])
-                y.append(value)
+            value = self.main_node.predict(x[i])
+            y.append(value)
         return y
 
     def fit_predict(x, y):
@@ -30,3 +29,10 @@ class DecisionTree:
     def scoring():
         pass
         # retrn score (MSE)
+
+    def display_tree(main_node):
+        if main_node is not None:
+            print(f"Limite : {main_node.limit}, Index : {main_node.param_index}")
+
+            display_tree(main_node.node_p)
+            display_tree(main_node.node_n)
