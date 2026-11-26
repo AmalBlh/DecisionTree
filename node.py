@@ -13,72 +13,94 @@ class Node:
         self.node_p = None
         self.node_n = None
         self.depth = depth
+        self.limit = None
+        self.param_index = None
+        self.len_split = None
         pass
 
     def split(self, x, y, max_depth, min_sample_leaf):
 
         self.searchSplit(x, y, min_sample_leaf)
 
-        node_p, x_p, y_p, node_n, x_n, y_n = self.applySplit(x, y)
+        node_p, x_p, y_p, node_n, x_m, y_m = self.applySplit(x, y)
 
         if node_p.depth < max_depth and min_sample_leaf < len(y_p):
-            node_p.split(
-                x_p,
-            )
-        if node_n.depth < max_depth and min_sample_leaf < len(y_p):
-            node_n.split(x_n, y_n)
+            node_p.split(x_p, y_p, max_depth, min_sample_leaf)
+        if node_n.depth < max_depth and min_sample_leaf < len(y_m):
+            node_n.split(x_m, y_m, max_depth, min_sample_leaf)
 
         return
 
     def searchSplit(self, x, y, min_sample_leaf):
         min_mse = np.inf
-        min_limit = None
-        feature = 0
-        value = None
-        for i in range(0, len(x)):
-            feature = x[:, [i, -1]]
 
-            indices = np.argsort(feature[:, i])
+        nb_colonnes, nb_lignes = x.shape
 
-            for limit in range(min_sample_leaf, len(indices) - min_sample_leaf):
+        for i in range(0, nb_colonnes):
+            feature = x[[i, -1], :]
 
-                feature_m = feature[i, [0, limit]]
-                feature_p = feature[i, [limit + 1, len(feature)]]
+            # Tri selon la première ligne
+            indices = np.argsort(feature[0])
+
+            # Réorganisation de toutes les lignes
+            feature_sorted = feature[:, indices]
+
+            for limit in range(min_sample_leaf, nb_lignes - min_sample_leaf):
+
+                feature_m = feature_sorted[1, 0:limit]
+                feature_p = feature_sorted[1, limit + 1 : nb_lignes]
                 average_m = np.average(feature_m)
                 average_p = np.average(feature_p)
 
-                mse_m = ((feature_m - average_m) ** 2).mean(feature_m)
-                mse_p = ((feature_p - average_p) ** 2).mean(feature_p)
-                mse = (mse_m * len(feature_m) + mse_p * len(feature_p)) / len(feature)
+                mse_m = np.mean((feature_m - average_m) ** 2)
+                mse_p = np.mean((feature_p - average_p) ** 2)
+                mse = (mse_m * len(feature_m) + mse_p * len(feature_p)) / nb_lignes
                 if mse < min_mse:
-                    value = feature[i, 0]
+                    self.value = feature[0, i]
                     mse = min_mse
-                    min_limit = limit
-                    feature = i
-
-        self.limit = min_limit
-        self.param_index = feature
-        self.value = value
+                    self.limit = limit
+                    self.param_index = i
+                    self.len_split = len(feature_m)
 
         return
 
-    def applySplit(x, y):
-
+    def applySplit(self, x, y):
+        data = np.concatenate((x, y))
+        nb_lignes, nb_colonnes = data.shape
+        # data_sorted = data[np.argsort(data[:, self.param_index], axis=0)]
         # depth+1
-        # return node_p, x_p, y_p, node_n, x_n, y_n
-        pass
 
-  
-    
+        # Tri selon la première ligne
+        indices = np.argsort(data[self.param_index])
+
+        # Réorganisation de toutes les lignes
+        data_sorted = data[:, indices]
+
+        limit = self.len_split
+
+        data_p = data_sorted[:, :limit]
+        data_m = data_sorted[:, limit:]
+
+        # Separar X e y (suponiendo que la última fila contiene y)
+        x_p = data_p[:-1, :]
+        y_p = [data_p[-1, :].T]
+
+        x_m = data_m[:-1, :]
+        y_m = [data_m[-1, :].T]
+
+        node_p = Node(self.depth + 1)
+        node_n = Node(self.depth + 1)
+
+        return node_p, x_p, y_p, node_n, x_m, y_m
+
     def predict(self, x):
 
         if self.node_p is None and self.node_n is None:
             return self.value
 
         param = self.param_index
-        if(x[param] > self.limit):
-            return self.node_p.predict(x)
-        else :
-            return self.node_n.predict(x)
 
-        
+        if x[param] > self.limit:
+            return self.node_p.predict(x)
+        else:
+            return self.node_n.predict(x)
