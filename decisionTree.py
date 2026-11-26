@@ -34,9 +34,9 @@ class DecisionTree:
         
         return somme / n
 
-    def display_tree(main_node):
+    def display_tree(self, main_node):
         if main_node is not None:
             print(f"Limite : {main_node.limit}, Index : {main_node.param_index}")
 
-            display_tree(main_node.node_p)
-            display_tree(main_node.node_n)
+            self.display_tree(main_node.node_p)
+            self.display_tree(main_node.node_n)
