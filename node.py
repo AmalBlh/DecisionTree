@@ -20,7 +20,7 @@ class Node:
         pass
 
     def split(self, x, y, max_depth, min_sample_leaf):
-
+        print(self.depth)
         self.searchSplit(x, y, min_sample_leaf)
 
         self.node_p, x_p, y_p, self.node_n, x_m, y_m = self.applySplit(x, y)
@@ -35,11 +35,11 @@ class Node:
 
     def searchSplit(self, x, y, min_sample_leaf):
         min_mse = np.inf
-
-        nb_colonnes, nb_lignes = x.shape
+        data = np.concatenate((x, y))
+        nb_colonnes, nb_lignes = data.shape
 
         for i in range(0, nb_colonnes):
-            feature = x[[i, -1], :]
+            feature = data[[i, -1], :]
 
             # Tri selon la première ligne
             indices = np.argsort(feature[0])
@@ -116,10 +116,10 @@ class Node:
             if self.limit is not None:
                 print("   "*self.depth +  f"Depth : {self.depth} Limite : {self.limit}, ParamIndex : {self.param_index}, Side : {side}")
             elif self.value is not None:
-                print("   "*self.depth +  f"Depth : {self.depth} Value = {self.value} Side : {side}")
-            if self.node_p is not None :
-                self.node_p.display_node("Positive")
-            if self.node_n is not None :
-                self.node_n.display_node("Negative")
+               print("   "*self.depth +  f"Depth : {self.depth} Value = {round(self.value,2)} Side : {side}")
+        if self.node_p is not None :
+            self.node_p.display_node("Positive")
+        if self.node_n is not None :
+            self.node_n.display_node("Negative")
         
         return 
