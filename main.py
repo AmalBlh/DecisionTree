@@ -5,15 +5,13 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from sklearn.tree import DecisionTreeRegressor
 import time
+
+
 def main():
 
-    #Génération de 100 observations et 3 variables
+    # Génération de 100 observations et 3 variables
     X, y = make_regression(
-        n_samples=1000,
-        n_features=3,
-        n_informative=3,
-        noise=15,
-        random_state=42
+        n_samples=50000, n_features=3, n_informative=3, noise=15, random_state=42
     )
 
     # Normalisation de X entre 0 et 1
@@ -32,7 +30,6 @@ def main():
 
     print("\nX :\n", X[:5])
     print("\ny :\n", y[:5])
-    
 
     max_depth = 4
     min_sample_leaf = 5
@@ -48,21 +45,19 @@ def main():
     end = time.time()
     length = end - start
 
-  
     start = time.time()
-    
+
     tree_verif.fit(X, y)
-    
+
     end = time.time()
     length2 = end - start
-    
-        
+
     y_pred = tree.predict(X)
 
     y_pred_verif = tree_verif.predict(X)
 
     print(y_pred)
-    score = tree.score(y ,y_pred)
+    score = tree.score(y, y_pred)
     score_verif = mean_squared_error(y, y_pred_verif)
     tree.display_tree()
     print(y_pred)
@@ -70,7 +65,7 @@ def main():
     print("DecisionTreeRegressor MSE:", score_verif)
 
     print("Length 1", length, "seconds!")
-        
+
     print("Length 2 ", length2, "seconds!")
 
 
