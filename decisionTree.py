@@ -7,7 +7,7 @@ class DecisionTree:
     # min_sample_leaf = None
     # max_depth = None
 
-    def __init__(self, min_sample_leaf, max_depth):
+    def __init__(self, max_depth, min_sample_leaf):
         self.max_depth = max_depth
         self.min_sample_leaf = min_sample_leaf
         self.main_node = Node(0)
@@ -38,9 +38,6 @@ class DecisionTree:
 
         return somme / n
 
-    def display_tree(self, main_node):
-        if main_node is not None:
-            print(f"Limite : {main_node.limit}, Index : {main_node.param_index}")
-
-            self.display_tree(main_node.node_p)
-            self.display_tree(main_node.node_n)
+    def display_tree(self):
+        self.main_node.display_node()
+        return

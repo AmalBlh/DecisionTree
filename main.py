@@ -150,15 +150,16 @@ def main():
     # X = df[["Edad", "Salario", "Experiencia"]]
     # y = df["Comprara"]
 
-    max_depth = 3
+    max_depth = 10
     min_sample_leaf = 2
     tree = DecisionTree(max_depth, min_sample_leaf)
 
     tree.fit(X, y)
 
-    # tree.predict(X)
+    #tree.predict(X)
 
-    # tree.score()
+    #tree.score()
+    tree.display_tree()
 
 
 if __name__ == "__main__":
