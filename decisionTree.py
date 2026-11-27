@@ -18,13 +18,13 @@ class DecisionTree:
         return self.main_node
 
     def predict(self, x):
-        y = []
-
-        for i in range(x):
+        y_pred = []
+        l = x.shape[0]
+        for i in range(l):
             value = self.main_node.predict(x[i])
-            y.append(value)
+            y_pred.append(value)
 
-        return y
+        return np.array(y_pred)
 
     def fit_predict(x, y):
         pass

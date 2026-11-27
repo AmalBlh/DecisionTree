@@ -22,12 +22,17 @@ class Node:
     def split(self, x, y, max_depth, min_sample_leaf):
         print(self.depth)
         self.searchSplit(x, y, min_sample_leaf)
+        if self.limit is None:
+            self.value = np.mean(y)
+            return
 
         self.node_p, x_p, y_p, self.node_n, x_m, y_m = self.applySplit(x, y)
-        nb_leaf_p=y_p.shape[1]  
+        nb_leaf_p = y_p.shape[1]
+        nb_leaf_m = y_m.shape[1]
+        self.node_p.value = np.mean(y_p)
+        self.node_n.value = np.mean(y_m)
         if self.node_p.depth < max_depth and min_sample_leaf < nb_leaf_p:
             self.node_p.split(x_p, y_p, max_depth, min_sample_leaf)
-        nb_leaf_m=y_p.shape[1]  
         if self.node_n.depth < max_depth and min_sample_leaf < nb_leaf_m:
             self.node_n.split(x_m, y_m, max_depth, min_sample_leaf)
 
@@ -105,9 +110,8 @@ class Node:
             return self.value
 
         param = self.param_index
-
         if x[param] > self.limit:
-            return self.node_p.predict(x)
+           return self.node_p.predict(x)
         else:
             return self.node_n.predict(x)
 
