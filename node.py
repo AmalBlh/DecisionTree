@@ -20,16 +20,20 @@ class Node:
         pass
 
     def split(self, x, y, max_depth, min_sample_leaf):
-        print(self.depth)
+        
         self.searchSplit(x, y, min_sample_leaf)
-
-        self.node_p, x_p, y_p, self.node_n, x_m, y_m = self.applySplit(x, y)
-        nb_leaf_p=y_p.shape[1]  
-        if self.node_p.depth < max_depth and min_sample_leaf < nb_leaf_p:
-            self.node_p.split(x_p, y_p, max_depth, min_sample_leaf)
-        nb_leaf_m=y_p.shape[1]  
-        if self.node_n.depth < max_depth and min_sample_leaf < nb_leaf_m:
-            self.node_n.split(x_m, y_m, max_depth, min_sample_leaf)
+        if self.len_split is not None :
+            self.node_p, x_p, y_p, self.node_n, x_m, y_m = self.applySplit(x, y)
+            nb_leaf_p=y_p.shape[1]  
+            if self.node_p.depth < max_depth and min_sample_leaf < nb_leaf_p:
+                self.node_p.split(x_p, y_p, max_depth, min_sample_leaf)
+            else :
+                self.node_p.compute_value(x_p, y_p)
+            nb_leaf_m=y_p.shape[1]  
+            if self.node_n.depth < max_depth and min_sample_leaf < nb_leaf_m:
+                self.node_n.split(x_m, y_m, max_depth, min_sample_leaf)
+            else :
+                self.node_p.compute_value(x_m, y_m)
 
         return
 
@@ -71,33 +75,43 @@ class Node:
         return
 
     def applySplit(self, x, y):
+        if (self.len_split is not None) :
+            data = np.concatenate((x, y))
+            nb_lignes, nb_colonnes = data.shape
+            # data_sorted = data[np.argsort(data[:, self.param_index], axis=0)]
+            # depth+1
+
+            # Tri selon la première ligne
+            indices = np.argsort(data[self.param_index])
+
+            # Réorganisation de toutes les lignes
+            data_sorted = data[:, indices]
+
+            limit = self.len_split
+
+            data_p = data_sorted[:, :limit]
+            data_m = data_sorted[:, limit:]
+
+            # Separar X e y (suponiendo que la última fila contiene y)
+            x_p = data_p[:-1, :]
+            y_p = data_p[-1:, :]
+
+            x_m = data_m[:-1, :]
+            y_m = data_m[-1:, :]
+
+            node_p = Node(self.depth + 1)
+            node_n = Node(self.depth + 1)
+
+            return node_p, x_p, y_p, node_n, x_m, y_m
+        return None
+
+    def compute_value(self, x, y):
         data = np.concatenate((x, y))
-        nb_lignes, nb_colonnes = data.shape
-        # data_sorted = data[np.argsort(data[:, self.param_index], axis=0)]
-        # depth+1
+        
+        self.value = np.average(data[-1,:])
+        return
 
-        # Tri selon la première ligne
-        indices = np.argsort(data[self.param_index])
 
-        # Réorganisation de toutes les lignes
-        data_sorted = data[:, indices]
-
-        limit = self.len_split
-
-        data_p = data_sorted[:, :limit]
-        data_m = data_sorted[:, limit:]
-
-        # Separar X e y (suponiendo que la última fila contiene y)
-        x_p = data_p[:-1, :]
-        y_p = data_p[-1:, :]
-
-        x_m = data_m[:-1, :]
-        y_m = data_m[-1:, :]
-
-        node_p = Node(self.depth + 1)
-        node_n = Node(self.depth + 1)
-
-        return node_p, x_p, y_p, node_n, x_m, y_m
 
     def predict(self, x):
 
