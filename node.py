@@ -119,9 +119,8 @@ class Node:
             return self.value
 
         param = self.param_index
-
         if x[param] > self.limit:
-            return self.node_p.predict(x)
+           return self.node_p.predict(x)
         else:
             return self.node_n.predict(x)
 
