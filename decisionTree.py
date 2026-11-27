@@ -2,10 +2,6 @@ from node import Node
 import numpy as np
 
 class DecisionTree:
-    # score
-    # main_node
-    # min_sample_leaf = None
-    # max_depth = None
 
     def __init__(self, max_depth, min_sample_leaf):
         self.max_depth = max_depth
@@ -26,9 +22,10 @@ class DecisionTree:
 
         return np.array(y_pred)
 
-    def fit_predict(x, y):
-        pass
-        # a verifier
+    def fit_predict(self, x, y):
+        self.fit(x, y)
+        self.predict(x, y)
+        return
 
 
     def score(self, y, y_pred):

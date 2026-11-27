@@ -3,12 +3,6 @@ import numpy as np
 
 class Node:
 
-    # limit
-    # param_index
-
-    # depth
-    # value
-
     def __init__(self, depth):
         self.node_p = None
         self.node_n = None
