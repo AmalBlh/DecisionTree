@@ -19,9 +19,9 @@ class DecisionTree:
 
     def predict(self, x):
         y_pred = []
-        l = x.shape[1]
+        l = x.shape[0]
         for i in range(l):
-            value = self.main_node.predict(x[:,i])
+            value = self.main_node.predict(x[i])
             y_pred.append(value)
 
         return np.array(y_pred)
@@ -30,13 +30,6 @@ class DecisionTree:
         pass
         # a verifier
 
-    def score(y, y_pred):
-        n = len(y)
-        somme = 0
-        for i in range(n):
-            somme += (y[i] - y_pred[i]) ** 2
-
-        return somme / n
 
     def score(self, y, y_pred):
         y = np.array(y).flatten()
