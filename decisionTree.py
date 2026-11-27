@@ -1,5 +1,5 @@
 from node import Node
-
+import numpy as np
 
 class DecisionTree:
     # score
