@@ -10,8 +10,10 @@ class DecisionTree:
         return
 
     def fit(self, x, y):
-        self.main_node.split(x, y, self.max_depth, self.min_sample_leaf)
-        return self.main_node
+        self.main_node = Node(0)
+        if (self.max_depth>0) :
+            self.main_node.split(x, y, self.max_depth, self.min_sample_leaf)
+        return self
 
     def predict(self, x):
         y_pred = []
@@ -24,7 +26,7 @@ class DecisionTree:
 
     def fit_predict(self, x, y):
         self.fit(x, y)
-        self.predict(x, y)
+        self.predict(x)
         return
 
 
