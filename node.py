@@ -17,7 +17,7 @@ class Node:
         self.value = None
         self.param_index = None
         self.len_split = None
-        pass
+        
 
     def split(self, x, y, max_depth, min_sample_leaf):
         
@@ -42,7 +42,7 @@ class Node:
         data = np.concatenate((x, y))
         nb_colonnes, nb_lignes = data.shape
 
-        for i in range(0, nb_colonnes):
+        for i in range(0, nb_colonnes-1):
             feature = data[[i, -1], :]
 
             # Tri selon la première ligne
@@ -120,7 +120,7 @@ class Node:
 
         param = self.param_index
         if x[param] > self.limit:
-           return self.node_p.predict(x)
+            return self.node_p.predict(x)
         else:
             return self.node_n.predict(x)
 

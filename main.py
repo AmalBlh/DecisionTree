@@ -156,11 +156,12 @@ def main():
 
     tree.fit(X, y)
 
-    y = tree.predict(X)
-    print(y)
-    #tree.score()
+    y_pred = tree.predict(X)
+    print(y_pred)
+    score = tree.score(y ,y_pred)
     #tree.display_tree()
-
+    print(y_pred)
+    print(score)
 
 if __name__ == "__main__":
     main()
